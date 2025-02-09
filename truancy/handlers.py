@@ -23,15 +23,16 @@ async def create_doc(message: Message):
     doc = DocxTemplate(doc_stream)
 
     city = 'Ростов-на-Дону'
-    contract = '2238/2024'
-    act_data = '01.11.2024'
-    act_time = '19:00'
-    full_name = 'Клименко Вероника Сергеевна'
-    work_data = '01.11.2024'
-    begin_time_hour = '09'
-    begin_time_minute = '00'
-    end_time_hour = '18'
-    end_time_minute = '30'
+    c_numb = '2238/2024'
+    a_data = '01.11.2024'
+    a_time = '19:00'
+    f_name = 'Клименко Вероника Сергеевна'
+    r_name = 'Стетюха Александр Анатольевич'
+    wd = '01.11.2024'
+    bh = '09'
+    bm = '00'
+    eh = '18'
+    em = '30'
 
     '''
     Нужно сделать функционал, при 
@@ -40,16 +41,17 @@ async def create_doc(message: Message):
     '''
 
     context = {
-        'city': city,
-        'contract': contract,
-        'act_data': act_data, 
-        'act_time': act_time,
-        'full_name': full_name,
-        'work_data': work_data,
-        'begin_time_hour': begin_time_hour, 
-        'begin_time_minute': begin_time_minute, 
-        'end_time_hour': end_time_hour, 
-        'end_time_minute': end_time_minute,
+        'city': city, # город
+        'contract': c_numb, # номер договора
+        'act_data': a_data, # дата составления акта
+        'act_time': a_time, # время составления акта
+        'full_name': f_name, # фио сотрудника
+        'r_name': r_name, # имя руководителя
+        'work_data': wd, # дата невыхода
+        'begin_time_hour': bh, # часы начала смены
+        'begin_time_minute': bm, # минуты начала смены
+        'end_time_hour': eh, # часы окончания смены
+        'end_time_minute': em, # минуты окончания смены
     }
 
     # Заменяем шаблонные переменные в документе
