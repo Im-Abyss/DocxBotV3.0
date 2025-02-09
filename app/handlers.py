@@ -32,7 +32,12 @@ async def handle_document(message: Message):
     heading = "Это мой документ"
     paragraph = "И этот документ сделал телеграм бот"
 
-    # Данные для вставки в шаблон
+    '''
+    Такие заголовки надо сделать для
+    заявления по невыходам, пример
+    заголовков в тестовом файле внизу
+    '''
+
     context = {
         "heading": heading,
         "paragraph": paragraph,
