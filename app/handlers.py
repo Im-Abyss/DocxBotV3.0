@@ -1,12 +1,12 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
-from aiogram.filters import Command, StateFilter
+from aiogram.types import Message
+from aiogram.filters import Command, CommandStart, StateFilter
 from aiogram.fsm.context import FSMContext
 
 import app.keyboards as kb
 from truancy import create_doc, test
-from .FSM import Ai
-from .ai import main
+from app.FSM import Ai
+from app.ai import main
 
 
 router = Router()
@@ -15,6 +15,12 @@ router = Router()
 @router.message(F.text == 'Я абоба')
 async def test_document(message: Message):
     await test(message=message)
+
+
+@router.message(CommandStart())
+async def start(message: Message):
+    await message.answer('Здравствуйте, пожалуйста, выберите документ.', 
+                         reply_markup=kb.keyboard_truancy)
 
 
 @router.message(F.document)

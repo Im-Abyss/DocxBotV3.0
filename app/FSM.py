@@ -9,10 +9,14 @@ class Ai(StatesGroup):
 
 class Truancy(StatesGroup):
 
-    act_numb = State() # номер акта
-    act_date = State() # дата составления акта
-    act_time = State() # время составления акта
+    '''
+    Нужно ещё дописать состояния для
+    лиц, подписавших акт, сложность
+    в том, что их может быть каждый
+    раз по разному в количестве
+    '''
+
+    act_numb_date_time = State() # номер, дата и время составления акта
     workers = State() # сотрудники, подписавшие акт
-    truancy_date = State() # дата невыхода
-    truancy_time = State() # время невыхода
-    truancy_create_doc = State()
+    truancy_date_time = State() # дата и время невыхода
+    truancy_create_doc = State() # создание документа
