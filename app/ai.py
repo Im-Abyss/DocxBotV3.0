@@ -1,0 +1,40 @@
+from mistralai import Mistral
+
+from config import AI_TOKEN
+
+
+async def main(content):
+    api_key = AI_TOKEN
+    model = "mistral-large-latest"
+
+    client = Mistral(api_key=api_key)
+
+    response = await client.chat.complete_async(
+        model=model,
+        messages=[
+             {
+                  "role": "user",
+                  "content": content,
+              },
+        ],
+    )
+    
+    return response.choices[0].message.content
+
+async def check_error(content):
+    api_key = AI_TOKEN
+    model = "mistral-large-latest"
+
+    client = Mistral(api_key=api_key)
+
+    response = await client.chat.complete_async(
+        model=model,
+        messages=[
+             {
+                  "role": "user",
+                  "content": content,
+              },
+        ],
+    )
+    
+    return response.choices[0].message.content
