@@ -12,19 +12,11 @@ async def test(message: Message):
     await message.answer('Ты абоба кста')
 
 
-import io
-from aiogram import Router, types, F
-from aiogram.types import Message
-from aiogram.fsm.context import FSMContext
-from docxtpl import DocxTemplate
-import os
-
-router = Router()
 
 async def create_doc(message: Message, state: FSMContext):
-
     data = await state.get_data()
 
+    # Извлекаем переменные
     act = data.get('act_numb')
     ad = data.get('day')
     am = data.get('month')
@@ -48,49 +40,67 @@ async def create_doc(message: Message, state: FSMContext):
     vh = data.get('check_hours')
     mv = data.get('check_minutes')
 
+    # Извлекаем подписи
+    signatures = data.get('signatures', [])
+
+    # Формируем строку с подписями, разделёнными запятыми
+    signatures_str = ', '.join(
+        f"{signature['position']} {signature['surname']} {signature['initials']}"
+        for signature in signatures
+    )
+
+    # Путь к шаблону
     template_path = os.path.join(os.path.dirname(__file__), 'pattern.docx')
 
+    # Загружаем шаблон
     with open(template_path, 'rb') as file:
         doc_stream = io.BytesIO(file.read())
 
     doc = DocxTemplate(doc_stream)
 
+    # Формируем контекст
     context = {
-        'act': act, # номер акта
-        'ad': ad,   # день составления акта
-        'am': am,   # месяц составления акта
-        'ay': ay,   # год составления акта
-        'ah': ah,   # время составления акта
-        'ma':ma,    # время составления акта
+        'act': act,  # номер акта
+        'ad': ad,    # день составления акта
+        'am': am,    # месяц составления акта
+        'ay': ay,    # год составления акта
+        'ah': ah,    # время составления акта
+        'ma': ma,    # время составления акта
 
-        'ln': ln,   # имя сотрудника
-        'fn': fn,   # фамилия сотрудника
-        'pt': pt,   # отчество сотрудника
-        'inl': inl, # инициалы сотрудника
+        'ln': ln,    # имя сотрудника
+        'fn': fn,    # фамилия сотрудника
+        'pt': pt,    # отчество сотрудника
+        'inl': inl,  # инициалы сотрудника
 
-        'wd': wd,   # день невыхода
-        'wm': wm,   # месяц невыхода
-        'wy': wy,   # год невыхода
-        'bh': bh,   # часы начала смены
-        'bm': bm,   # минуты начала смены
-        'eh': eh,   # часы окончания смены
-        'em': em,   # минуты окончания смены
+        'wd': wd,    # день невыхода
+        'wm': wm,    # месяц невыхода
+        'wy': wy,    # год невыхода
+        'bh': bh,    # часы начала смены
+        'bm': bm,    # минуты начала смены
+        'eh': eh,    # часы окончания смены
+        'em': em,    # минуты окончания смены
         
-        'vd': vd,   # день проверки
-        'vm': vm,   # месяц проверки
-        'vy': vy,   # год проверки
-        'vh': vh,   # часы проверки
-        'mv': mv    # минуты проверки
+        'vd': vd,    # день проверки
+        'vm': vm,    # месяц проверки
+        'vy': vy,    # год проверки
+        'vh': vh,    # часы проверки
+        'mv': mv,    # минуты проверки
+
+        'signatures': signatures_str  # Строка с подписями
     }
 
+    # Заполняем шаблон
     doc.render(context)
 
+    # Сохраняем изменённый документ
     output_stream = io.BytesIO()
     doc.save(output_stream)
     output_stream.seek(0)
 
+    # Отправляем документ пользователю
     await message.reply_document(
         document=types.BufferedInputFile(file=output_stream.read(), filename='Изменённый.docx')
     )
 
+    # Очищаем состояние
     await state.clear()

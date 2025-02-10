@@ -95,7 +95,17 @@ async def doc_one(message: Message, state: FSMContext):
         await message.answer("Некорректное время: минуты должны быть от 0 до 59.")
         return
 
-    await state.update_data(act_numb=number_part, day=day, month=month, year=year, hours=hours, minutes=minutes)
+    # Форматируем минуты, чтобы они всегда были двузначными
+    minutes_str = str(minutes).zfill(2)
+
+    await state.update_data(
+        act_numb=number_part,
+        day=day,
+        month=month_str,
+        year=year,
+        hours=hours,
+        minutes=minutes_str  # Используем отформатированные минуты
+    )
     await message.answer('ФИО сотрудника, который не вышел на смену')
     await state.set_state(Truancy.truancy_worker)
 
@@ -212,7 +222,7 @@ async def doc_one(message: Message, state: FSMContext):
 
     await state.update_data(
         truancy_day=truancy_day,
-        truancy_month=truancy_month,
+        truancy_month=month_str,
         truancy_year=truancy_year,
         truancy_start_hours=truancy_start_hours,
         truancy_start_minutes=truancy_start_minutes,
