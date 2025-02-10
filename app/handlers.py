@@ -40,21 +40,3 @@ async def try_ai(message: Message, state: FSMContext):
     response = await main(content=content)
     await message.answer(response)
     state.clear
-
-# @router.message(Command('test'))
-# async def send_docx_file(message: Message):
-#     # Путь к файлу в папке проекта
-#     file_path = os.path.join(os.path.dirname(__file__), 'pattern.docx')
-
-#     # Открываем файл в бинарном режиме
-#     with open(file_path, 'rb') as file:
-#         file_bytes = file.read()
-
-#     # Создаем BytesIO объект для отправки
-#     file_stream = io.BytesIO(file_bytes)
-#     file_stream.seek(0)
-
-#     # Отправляем файл пользователю
-#     await message.reply_document(
-#         document=types.BufferedInputFile(file=file_stream.read(), filename='pattern.docx')
-#     )
