@@ -51,8 +51,6 @@ async def create_doc(message: Message, state: FSMContext):
 
     doc = DocxTemplate(doc_stream)
 
-
-
     context = {
         'act': act,  # номер акта
         'ad': ad,  # день составления акта

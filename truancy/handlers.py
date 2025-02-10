@@ -43,24 +43,46 @@ async def doc_one(message: Message, state: FSMContext):
     try:
         number_part, date_part, time_part = input_data.split(',')
     except ValueError:
-        await message.answer("Неправильный формат. Используйте 12, 14.08.2022, 13:00")
+        await message.answer("Неправильный формат. Используйте 12, 15 июня 2020 г., 13:00")
         return
-    
-    date_parts = date_part.strip().split('.')
-    if len(date_parts) != 3:
-        await message.answer("Неправильный формат даты. Используйте ДД.ММ.ГГГГ.")
+
+    date_parts = date_part.strip().split()
+    if len(date_parts) != 3 or date_parts[2] != 'г.':
+        await message.answer("Неправильный формат даты. Используйте ДД ММММ ГГГГ (например, 15 июня 2020 г.).")
         return
-    
-    day, month, year = map(int, date_parts)
+
+    day = int(date_parts[0])
+    month_str = date_parts[1].lower()
+    year = int(date_parts[2])
+
+    months = {
+        'января': 1,
+        'февраля': 2,
+        'марта': 3,
+        'апреля': 4,
+        'мая': 5,
+        'июня': 6,
+        'июля': 7,
+        'августа': 8,
+        'сентября': 9,
+        'октября': 10,
+        'ноября': 11,
+        'декабря': 12
+    }
+
+    month = months.get(month_str)
+    if month is None:
+        await message.answer("Некорректный месяц.")
+        return
+
     if not (1 <= day <= 31) or not (1 <= month <= 12):
         await message.answer("Некорректная дата.")
         return
-    
+
     time_parts = time_part.strip().split(':')
     if len(time_parts) != 2:
         await message.answer("Неправильный формат времени. Используйте ЧЧ:ММ.")
         return
-    
     hours, minutes = map(int, time_parts)
     if not (0 <= hours < 24):
         await message.answer("Некорректное время: часы должны быть от 0 до 23.")
@@ -70,7 +92,7 @@ async def doc_one(message: Message, state: FSMContext):
         return
 
     await state.update_data(act_numb=number_part, day=day, month=month, year=year, hours=hours, minutes=minutes)
-    await message.answer('ФИО сотрудника, который не вышел на смену в формате:\n\n14.08.2022, 13:00, 21:00')
+    await message.answer('ФИО сотрудника, который не вышел на смену в формате:\n\n15 июня 2020 г., 13:00, 21:00')
     await state.set_state(Truancy.truancy_worker)
 
 
@@ -101,7 +123,7 @@ async def doc_one(message: Message, state: FSMContext):
     await state.update_data(name=name, last_name=last_name, 
                             first_name=first_name, patronymic=patronymic, 
                             initials=initials)
-    await message.answer('Дата и время смены сотрудника в формате:\n\n14.08.2022, 13:00')
+    await message.answer('Дата и время смены сотрудника в формате:\n\n14 июня 2022 г., 13:00, 21:00')
     await state.set_state(Truancy.truancy_date_time)
 
 
@@ -118,15 +140,40 @@ async def doc_one(message: Message, state: FSMContext):
     try:
         truancy_date, truancy_start_time, truancy_end_time = truancy_date_time.split(',')
     except ValueError:
-        await message.answer("Неправильный формат. Используйте 14.08.2022, 13:00, 21:00")
+        await message.answer("Неправильный формат. Используйте 14 июня 2022 г., 13:00, 21:00")
         return
 
-    truancy_date = truancy_date.strip().split('.')
-    if len(truancy_date) != 3:
-        await message.answer("Неправильный формат даты. Используйте ДД.ММ.ГГГГ.")
+    # Обработка даты
+    truancy_date = truancy_date.strip().split()
+    if len(truancy_date) != 3 or truancy_date[2] != 'г.':
+        await message.answer("Неправильный формат даты. Используйте ДД ММММ ГГГГ (например, 14 июня 2022 г.).")
         return
 
-    truancy_day, truancy_month, truancy_year = map(int, truancy_date)
+    truancy_day = int(truancy_date[0])
+    month_str = truancy_date[1].lower()
+    truancy_year = int(truancy_date[2])
+
+    # Преобразование названия месяца в номер месяца
+    months = {
+        'января': 1,
+        'февраля': 2,
+        'марта': 3,
+        'апреля': 4,
+        'мая': 5,
+        'июня': 6,
+        'июля': 7,
+        'августа': 8,
+        'сентября': 9,
+        'октября': 10,
+        'ноября': 11,
+        'декабря': 12
+    }
+
+    truancy_month = months.get(month_str)
+    if truancy_month is None:
+        await message.answer("Некорректный месяц.")
+        return
+
     if not (1 <= truancy_day <= 31) or not (1 <= truancy_month <= 12):
         await message.answer("Некорректная дата.")
         return
@@ -166,7 +213,7 @@ async def doc_one(message: Message, state: FSMContext):
         truancy_end_hours=truancy_end_hours,
         truancy_end_minutes=truancy_end_minutes
     )
-
+    
     await message.answer('Должность и ФИО подписавших акт в формате: \n\nдолжность: ФИО, должность: ФИО (и т. д.)')    
     await state.set_state(Truancy.managers)
 
