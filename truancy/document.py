@@ -23,6 +23,27 @@ router = Router()
 
 async def create_doc(message: Message, state: FSMContext):
 
+    data = await state.get_data()
+
+    act = data.get('act_numb')
+    ad = data.get('day')
+    am = data.get('month')
+    ay = data.get('year')
+    ah = data.get('hours')
+    am = data.get('minutes')
+    name = data.get('name')
+    ln = data.get('last_name')
+    fn = data.get('first_name')
+    pt = data.get('patronymic')
+    inl = data.get('initials')
+    wd = data.get('truancy_day')
+    wm = data.get('truancy_month')
+    wy = data.get('truancy_year')
+    bh = data.get('truancy_start_hours')
+    bm = data.get('truancy_start_minutes')
+    eh = data.get('truancy_end_hours')
+    em = data.get('truancy_end_minutes')
+
     template_path = os.path.join(os.path.dirname(__file__), 'pattern.docx')
 
     with open(template_path, 'rb') as file:
@@ -30,21 +51,7 @@ async def create_doc(message: Message, state: FSMContext):
 
     doc = DocxTemplate(doc_stream)
 
-    act = '24'
-    ad = '09'
-    am = 'месяц'
-    ay = '2022'
-    ah = '19'
-    am = '00'
-    name = 'Клименко Вероника Сергеевна'
-    book = 'Черкасов Александр Алексеевич'
-    hr = 'Белова Анна Анатольевна'
-    secr = 'Калугин Артём Александрович'
-    wd = '01.11.2024'
-    bh = '09'
-    bm = '00'
-    eh = '18'
-    em = '30'
+
 
     context = {
         'act': act,  # номер акта
@@ -54,10 +61,13 @@ async def create_doc(message: Message, state: FSMContext):
         'ah': ah,  # время составления акта
         'am': am,  # время составления акта
         'name': name,  # фио сотрудника
-        'book': book,  # фио гл бухгалтера
-        'hr': hr,  # фио специалиста по кадрам
-        'secr': secr,  # фио секретаря
-        'wd': wd,  # дата невыхода
+        'book': ln,  # имя сотрудника
+        'hr': fn,  # фамилия сотрудника
+        'secr': pt,  # отчество сотрудника
+        'inl': inl, # инициалы сотрудника
+        'wd': wd,  # день невыхода
+        'wm': wm,  # месяц невыхода
+        'wy': wy,  # год невыхода
         'bh': bh,  # часы начала смены
         'bm': bm,  # минуты начала смены
         'eh': eh,  # часы окончания смены
