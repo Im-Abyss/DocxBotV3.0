@@ -80,4 +80,4 @@ async def create_doc(message: Message, state: FSMContext):
         document=types.BufferedInputFile(file=output_stream.read(), filename='Изменённый.docx')
     )
 
-    await state.clear
+    await state.clear()
