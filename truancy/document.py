@@ -30,8 +30,7 @@ async def create_doc(message: Message, state: FSMContext):
     am = data.get('month')
     ay = data.get('year')
     ah = data.get('hours')
-    am = data.get('minutes')
-    name = data.get('name')
+    ma = data.get('minutes')
     ln = data.get('last_name')
     fn = data.get('first_name')
     pt = data.get('patronymic')
@@ -54,14 +53,13 @@ async def create_doc(message: Message, state: FSMContext):
     context = {
         'act': act,  # номер акта
         'ad': ad,  # день составления акта
-        'ad': am,  # месяц составления акта
-        'ad': ay,  # год составления акта
+        'am': am,  # месяц составления акта
+        'ay': ay,  # год составления акта
         'ah': ah,  # время составления акта
-        'am': am,  # время составления акта
-        'name': name,  # фио сотрудника
-        'book': ln,  # имя сотрудника
-        'hr': fn,  # фамилия сотрудника
-        'secr': pt,  # отчество сотрудника
+        'ma':ma,  # время составления акта
+        'ln': ln,  # имя сотрудника
+        'fn': fn,  # фамилия сотрудника
+        'pt': pt,  # отчество сотрудника
         'inl': inl, # инициалы сотрудника
         'wd': wd,  # день невыхода
         'wm': wm,  # месяц невыхода
