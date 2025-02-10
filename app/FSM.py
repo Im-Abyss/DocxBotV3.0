@@ -19,4 +19,5 @@ class Truancy(StatesGroup):
     act_numb_date_time = State() # номер, дата и время составления акта
     truancy_worker = State() # фио сотрудника, который отсутствовал
     truancy_date_time = State() # дата и время смены сотрудника
+    check = State() # доп проверка по пропускной системе
     managers = State() # фио подписавших акт

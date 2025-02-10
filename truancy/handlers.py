@@ -219,8 +219,79 @@ async def doc_one(message: Message, state: FSMContext):
         truancy_end_hours=truancy_end_hours,
         truancy_end_minutes=truancy_end_minutes
     )
+    
+    await message.answer('Дата и время дополнительной проверки по пропускной системе в формате:\n\n14 июня 2022, 17:00')
+    await state.set_state(Truancy.check)
 
-    await message.answer('Должность и ФИО подписавших акт в формате: \n\nдолжность: ФИО, должность: ФИО (и т. д.)')    
+
+@truancy.message(StateFilter(Truancy.check))
+async def verification(message: Message, state: FSMContext):
+
+    check_date_time = message.text.strip()
+    try:
+        check_date, check_time = check_date_time.split(',')
+    except ValueError:
+        await message.answer("Неправильный формат. Используйте 14 июня 2022, 17:00")
+        return
+
+    # Обработка даты
+    check_date = check_date.strip().split()
+    if len(check_date) != 3:
+        await message.answer("Неправильный формат даты. Используйте ДД ММММ ГГГГ (например, 14 июня 2022).")
+        return
+
+    check_day = int(check_date[0])
+    check_month_str = check_date[1].lower()
+    check_year = int(check_date[2])
+
+    # Преобразование названия месяца в номер месяца
+    months = {
+        'января': 1,
+        'февраля': 2,
+        'марта': 3,
+        'апреля': 4,
+        'мая': 5,
+        'июня': 6,
+        'июля': 7,
+        'августа': 8,
+        'сентября': 9,
+        'октября': 10,
+        'ноября': 11,
+        'декабря': 12
+    }
+
+    check_month = months.get(check_month_str)
+    if check_month is None:
+        await message.answer("Некорректный месяц.")
+        return
+
+    if not (1 <= check_day <= 31) or not (1 <= check_month <= 12):
+        await message.answer("Некорректная дата.")
+        return
+
+    # Обработка времени начала смены
+    check_time = check_time.strip().split(':')
+    if len(check_time) != 2:
+        await message.answer("Неправильный формат времени начала. Используйте ЧЧ:ММ.")
+        return
+
+    check_hours, check_minutes = map(int, check_time)
+    if not (0 <= check_hours < 24):
+        await message.answer("Некорректное время: часы должны быть от 0 до 23.")
+        return
+    if not (0 <= check_minutes < 60):
+        await message.answer("Некорректное время: минуты должны быть от 0 до 59.")
+        return
+
+    await state.update_data(
+        check_day=check_day,
+        check_month_str=check_month_str,
+        check_year=check_year,
+        check_hours=check_hours,
+        check_minutes=check_minutes
+    )
+
+    await message.answer('Должность и ФИО подписавших акт в формате: \n\nдолжность: ФИО, должность: ФИО (и т. д.)')
     await state.set_state(Truancy.managers)
 
 
@@ -258,6 +329,4 @@ async def doc_one(message: Message, state: FSMContext):
 
     # Сохраняем обработанные подписи в состоянии
     await state.update_data(signatures=processed_signatures)
-
-    # Запускаем финальную функцию для создания документа
     await create_doc(message=message, state=state)

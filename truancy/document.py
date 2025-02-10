@@ -42,6 +42,11 @@ async def create_doc(message: Message, state: FSMContext):
     bm = data.get('truancy_start_minutes')
     eh = data.get('truancy_end_hours')
     em = data.get('truancy_end_minutes')
+    vd = data.get('check_day')
+    vm = data.get('check_month_str')
+    vy = data.get('check_year')
+    vh = data.get('check_hours')
+    mv = data.get('check_minutes')
 
     template_path = os.path.join(os.path.dirname(__file__), 'pattern.docx')
 
@@ -51,23 +56,31 @@ async def create_doc(message: Message, state: FSMContext):
     doc = DocxTemplate(doc_stream)
 
     context = {
-        'act': act,  # номер акта
-        'ad': ad,  # день составления акта
-        'am': am,  # месяц составления акта
-        'ay': ay,  # год составления акта
-        'ah': ah,  # время составления акта
-        'ma':ma,  # время составления акта
-        'ln': ln,  # имя сотрудника
-        'fn': fn,  # фамилия сотрудника
-        'pt': pt,  # отчество сотрудника
+        'act': act, # номер акта
+        'ad': ad,   # день составления акта
+        'am': am,   # месяц составления акта
+        'ay': ay,   # год составления акта
+        'ah': ah,   # время составления акта
+        'ma':ma,    # время составления акта
+
+        'ln': ln,   # имя сотрудника
+        'fn': fn,   # фамилия сотрудника
+        'pt': pt,   # отчество сотрудника
         'inl': inl, # инициалы сотрудника
-        'wd': wd,  # день невыхода
-        'wm': wm,  # месяц невыхода
-        'wy': wy,  # год невыхода
-        'bh': bh,  # часы начала смены
-        'bm': bm,  # минуты начала смены
-        'eh': eh,  # часы окончания смены
-        'em': em,  # минуты окончания смены
+
+        'wd': wd,   # день невыхода
+        'wm': wm,   # месяц невыхода
+        'wy': wy,   # год невыхода
+        'bh': bh,   # часы начала смены
+        'bm': bm,   # минуты начала смены
+        'eh': eh,   # часы окончания смены
+        'em': em,   # минуты окончания смены
+        
+        'vd': vd,   # день проверки
+        'vm': vm,   # месяц проверки
+        'vy': vy,   # год проверки
+        'vh': vh,   # часы проверки
+        'mv': mv    # минуты проверки
     }
 
     doc.render(context)
