@@ -49,6 +49,12 @@ async def create_doc(message: Message, state: FSMContext):
         for signature in signatures
     )
 
+    # Формируем строку с подписями, разделёнными пустыми строками
+    signatures_formatted = '\n\n'.join(
+        f"{signature['position']} {signature['surname']} {signature['initials']}"
+        for signature in signatures
+    )
+
     # Путь к шаблону
     template_path = os.path.join(os.path.dirname(__file__), 'pattern.docx')
 
@@ -86,7 +92,8 @@ async def create_doc(message: Message, state: FSMContext):
         'vh': vh,    # часы проверки
         'mv': mv,    # минуты проверки
 
-        'signatures': signatures_str  # Строка с подписями
+        'signatures': signatures_str,  # Строка с подписями через запятую
+        's_formatted': signatures_formatted  # Строка с подписями через пустые строки
     }
 
     # Заполняем шаблон
