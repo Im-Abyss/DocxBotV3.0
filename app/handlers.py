@@ -12,11 +12,6 @@ from app.ai import main
 router = Router()
 
 
-@router.message(F.text == 'Я абоба')
-async def test_document(message: Message):
-    await test(message=message)
-
-
 @router.message(CommandStart())
 async def start(message: Message):
     await message.answer('Здравствуйте, пожалуйста, выберите документ.', 

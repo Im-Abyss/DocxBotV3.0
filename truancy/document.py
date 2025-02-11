@@ -8,11 +8,6 @@ from docxtpl import DocxTemplate
 
 
 
-async def test(message: Message):
-    await message.answer('Ты абоба кста')
-
-
-
 async def create_doc(message: Message, state: FSMContext):
     data = await state.get_data()
 
@@ -106,7 +101,7 @@ async def create_doc(message: Message, state: FSMContext):
 
     # Отправляем документ пользователю
     await message.reply_document(
-        document=types.BufferedInputFile(file=output_stream.read(), filename='Изменённый.docx')
+        document=types.BufferedInputFile(file=output_stream.read(), filename='Невыход.docx')
     )
 
     # Очищаем состояние
