@@ -4,7 +4,7 @@ from aiogram.filters import Command, CommandStart, StateFilter
 from aiogram.fsm.context import FSMContext
 
 import app.keyboards as kb
-from truancy import create_doc, test
+from truancy import create_doc
 from app.FSM import Ai
 from app.ai import main
 

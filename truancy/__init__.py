@@ -1,2 +1,2 @@
-from .document import create_doc, test
+from .document import create_doc
 from .handlers import truancy
