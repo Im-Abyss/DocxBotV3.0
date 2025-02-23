@@ -3,7 +3,7 @@ from mistralai import Mistral
 from config import AI_TOKEN
 
 
-async def check_error(content):
+async def main(content):
 
     '''
     Эта функция ИИ ассистента, но
