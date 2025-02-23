@@ -97,7 +97,7 @@ async def create_doc(message: Message, state: FSMContext):
     # Сохраняем изменённый документ
     output_stream = io.BytesIO()
     doc.save(output_stream)
-    print(output_stream.seek(0))
+    output_stream.seek(0)
 
     # Отправляем документ пользователю
     await message.reply_document(
